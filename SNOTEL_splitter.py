@@ -37,7 +37,7 @@ def splitFireSNOTEL(site_name, fire_dict, variable_type, disruption_dates, filep
         site = site_name
     elif site_name in fire_dict.values():
         site = list(fire_dict.keys())[list(fire_dict.values()).index(site_name)]
-        filepath = os.path.join(filepath,'paired_locs')
+        filepath = os.path.join(filepath,'paired_locs_new')
     else:
         print('Site not in list, ensure spelling is correct')
     # read in disruption date from provided file
