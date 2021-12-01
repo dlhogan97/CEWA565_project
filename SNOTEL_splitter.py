@@ -41,14 +41,13 @@ def splitFireSNOTEL(site_name, fire_dict, variable_type, disruption_dates, filep
     else:
         print('Site not in list, ensure spelling is correct')
     # read in disruption date from provided file
-    print('{} for {}'.format(site,variable))
+    print('{} for {}'.format(site,variable_type))
     disruption_date = disruption_dates[disruption_dates['site_name']==site]['fire_start_date'].to_list()[0]
     disruption_year = disruption_date.year
     # write out the file name using site name and snow variable of interest (swe or depth)
     filename = os.path.join(filepath,site_name+'_'+variable_type+'.csv')
     site_df = pd.read_csv(filename)
     # calculate for DOWY if variable is chosen
-    print(variable_type)
     if variable_type == 'swe_meltdates':
         df_b = site_df[site_df['water_year'] <= disruption_year]
         if end_date is not None:
@@ -59,9 +58,10 @@ def splitFireSNOTEL(site_name, fire_dict, variable_type, disruption_dates, filep
         # make sure datetime is datetime type
         site_df['datetime'] = pd.to_datetime(site_df['datetime'])
         # set index to datetime
-        site_df = site_df.set_index('datetime')
+        site_df = site_df.dropna().set_index('datetime')
         # filter before and after date of disturbance
         df_b = site_df[site_df.index < disruption_date]
+        print(len(df_b))
         # if end_date was included, the after-fire dataframe will report data up to that date
         if end_date is not None:
             df_a = site_df[(site_df.index >= disruption_date) & (site_df.index <= end_date)] 
